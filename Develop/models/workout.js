@@ -8,9 +8,48 @@ const workoutSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  
+  exercises: [
+    {
+      type: {
+        type: String,
+        trim: true
+      },
+      name: {
+        type: String,
+        trim: true
+      },
+      duration: {
+        type: Number
+      },
+      weight: {
+        type: Number
+      },
+      sets: {
+        type: Number
+      },
+      reps: {
+        type: Number
+      },
+      distance: {
+        type: Number
+      }
+    }
+  ]
+},
+  {
+    toJSON: {
+      virtuals: true
+    }
+  }
+);
+
+workoutSchema.virtual("totalDuration").get(function () {
+  return this.exercises.reduce((total, exercise) => {
+    return total + exercise.duration;
+  }, 0);
 });
 
-const Transaction = mongoose.model("Transaction", transactionSchema);
 
-module.exports = Transaction;
+const Workout = mongoose.model("Workout", workoutSchema);
+
+module.exports = Workout;
